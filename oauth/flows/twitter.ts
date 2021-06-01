@@ -2,7 +2,7 @@ import { v4 } from "uuid";
 import fetch from "node-fetch";
 import { getAuthString } from "../utils";
 import { Credentials } from "../types";
-import { Request } from "express";
+import { NextApiRequest } from "next";
 
 export const twitter = (credentials: Credentials) => {
   const { clientId, clientSecret, callback } = credentials;
@@ -71,7 +71,7 @@ export const twitter = (credentials: Credentials) => {
     return redirect.baseUrl(token);
   };
 
-  const getTwitterAccessToken = async (req: Request) => {
+  const getTwitterAccessToken = async (req: NextApiRequest) => {
     const oauthToken = req.query.oauth_token;
     const oauthVerifier = req.query.oauth_verifier;
     const response = await fetch(
@@ -91,7 +91,7 @@ export const twitter = (credentials: Credentials) => {
     return { oauth_token, oauth_token_secret };
   };
 
-  const getProfile = async (req: Request) => {
+  const getProfile = async (req: NextApiRequest) => {
     const accessToken = await getTwitterAccessToken(req);
 
     const authString = getAuthString(

@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { Credentials } from "../types";
-import { Request } from "express";
+import { NextApiRequest } from "next";
 
 export const github = (credentials: Credentials) => {
   const { clientId, clientSecret, callback } = credentials;
@@ -21,7 +21,7 @@ export const github = (credentials: Credentials) => {
     return `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${callback}&scope=user%3Aemail`;
   };
 
-  const getGithubAccessToken = async (req: Request) => {
+  const getGithubAccessToken = async (req: NextApiRequest) => {
     const code = req.query.code;
     const response = await fetch(
       `${accessToken.baseUrl}?client_id=${credentials.clientId}&client_secret=${credentials.clientSecret}&code=${code}&redirect_uri=${credentials.callback}`,
@@ -40,7 +40,7 @@ export const github = (credentials: Credentials) => {
     return access_token;
   };
 
-  const getProfile = async (req: Request) => {
+  const getProfile = async (req: NextApiRequest) => {
     const accessToken = await getGithubAccessToken(req);
     const fetchedProfile = await fetch(profile.baseUrl, {
       method: "GET",
